@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.SystemColor;
@@ -15,15 +16,35 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.SwingConstants;
 
 import config.Common;
 
-@SuppressWarnings("serial")
-public class ApplySuccessView extends JFrame {
+public class SignUpSuccessView extends JFrame {
+
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-	public ApplySuccessView(int loggedInId) {
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					SignUpSuccessView frame = new SignUpSuccessView();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public SignUpSuccessView() {
 		setTitle("Myanmar DCR Recruitment System");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
@@ -33,7 +54,7 @@ public class ApplySuccessView extends JFrame {
 
 		// Create the content pane and set its preferred size
 		contentPane = new JPanel();
-		contentPane.setPreferredSize(new Dimension(650, 480));
+		contentPane.setPreferredSize(new Dimension(650, 380));
 		contentPane.setBackground(SystemColor.inactiveCaption);
 		contentPane.setLayout(null);
 
@@ -56,37 +77,32 @@ public class ApplySuccessView extends JFrame {
 		panel.add(lblTitleBar);
 
 		// Load the image and create a JLabel
-		ImageIcon imageIcon = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/apply6.png");
+		ImageIcon imageIcon = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/SignUP1.png");
 		JLabel imageLabel = new JLabel(imageIcon);
-		imageLabel.setBounds(117, 0, 384, 212); // Adjust the position as needed
+		imageLabel.setBounds(270, 27, 107, 87); // Adjust the position as needed
 		contentPane.add(imageLabel);
 
-		JLabel lblSuccess = new JLabel("Application Applied Successfully !");
+		// Add components to the content pane
+		JLabel lblSuccess = new JLabel("Sign Up Success ");
 		lblSuccess.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
-		lblSuccess.setBounds(203, 210, 275, 32);
+		lblSuccess.setBounds(258, 147, 149, 32);
 		contentPane.add(lblSuccess);
-		
-		JLabel lblApplySuccess_1 = new JLabel(
-				"<html>Thank you for Applying for the Recruitment at Myanmar DCR. Our HR Team is <br></html>");
-		lblApplySuccess_1.setBounds(117, 252, 494, 32);
-		contentPane.add(lblApplySuccess_1);
 
-		JLabel lblApplySuccess_2 = new JLabel("<html>Reviewing Your Application and will contact you.</html>");
-		lblApplySuccess_2.setBounds(203, 282, 298, 23);
-		contentPane.add(lblApplySuccess_2);
-		
-		JLabel lblAppreciate = new JLabel("We appreciate your interest in joining our team.");
-		lblAppreciate.setBounds(203, 326, 275, 23);
-		contentPane.add(lblAppreciate);
-		
+		JLabel lblCongratolation = new JLabel(
+				"Congratulations , your account has  been successfully created.");
+		lblCongratolation.setHorizontalAlignment(SwingConstants.LEFT);
+		lblCongratolation.setBounds(167, 202, 330, 32);
+		contentPane.add(lblCongratolation);
+
 		wrapper.add(contentPane);
 
-		JButton btnClose = Common.addActionButton("Close");
-//		btnClose.setForeground(new Color(255, 255, 255));
-//		btnClose.setBackground(new Color(94, 148, 255));
-//		btnClose.setBorderPainted(false);
-		btnClose.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		btnClose.addActionListener(new ActionListener() {
+//		JButton btnContinue = new JButton("Continue");
+//		btnContinue.setForeground(new Color(255, 255, 255));
+//		btnContinue.setBackground(new Color(94, 148, 255));
+//		btnContinue.setBorderPainted(false);
+		JButton btnContinue = Common.addActionButton("Continue");
+		btnContinue.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnContinue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				LoginView loginView = new LoginView();
@@ -94,25 +110,8 @@ public class ApplySuccessView extends JFrame {
 				loginView.setVisible(true);
 			}
 		});
-		btnClose.setBounds(230, 406, 200, 32);
-		contentPane.add(btnClose);
-		
-//		JButton btnApply = new JButton("Apply Form");
-//		btnApply.setForeground(new Color(255, 255, 255));
-//		btnApply.setBackground(new Color(94, 148, 255));
-//		btnApply.setBorderPainted(false);
-//		btnApply.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//		btnApply.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				dispose();
-//				ApplyFormView applyFormView = new ApplyFormView(loggedInId);
-//				applyFormView.setExtendedState(JFrame.MAXIMIZED_BOTH);
-//				applyFormView.setVisible(true);
-//			}
-//		});
-//		btnApply.setBounds(100, 406, 200, 32);
-//		contentPane.add(btnApply);
-		
+		btnContinue.setBounds(231, 282, 200, 32);
+		contentPane.add(btnContinue);
 		// Add the wrapper to the main content pane
 		getContentPane().add(wrapper, BorderLayout.CENTER);
 
@@ -121,13 +120,5 @@ public class ApplySuccessView extends JFrame {
 
 		// Center the window on the screen
 		setLocationRelativeTo(null);
-	}
-
-
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
-			ApplySuccessView view = new ApplySuccessView(1);
-			view.setVisible(true);
-		});
 	}
 }
