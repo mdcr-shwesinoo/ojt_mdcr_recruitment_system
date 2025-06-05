@@ -88,7 +88,7 @@ public class ApplicantListView extends JFrame {
 		titlePanel.setLayout(null);
 		getContentPane().add(titlePanel, BorderLayout.NORTH);
 
-		ImageIcon titleImage = new ImageIcon("C:/25225/OJT_Recruitment_System/ojt_mdcr_recruitment_system/src/image/mdcr3.png");
+		ImageIcon titleImage = new ImageIcon(getClass().getResource("/image/mdcr3.png"));
 		JLabel imageTitleLabel = new JLabel(titleImage);
 		imageTitleLabel.setBounds(25, 0, 141, 50);
 		titlePanel.add(imageTitleLabel);

@@ -338,6 +338,9 @@ public class ApplyFormView extends JFrame {
 
 		// Placeholder For DOB of NRC Card
 		editor = (JTextField) txtDOB.getDateEditor().getUiComponent();
+		editor.setEditable(false);
+		editor.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		editor.setFocusable(false);
 		editor.setBorder(BorderFactory.createEmptyBorder());
 		Common.setPlaceholder(editor, dobPH);
 		editor.setForeground(Color.GRAY);
@@ -477,7 +480,7 @@ public class ApplyFormView extends JFrame {
 		getContentPane().add(menuPanel, BorderLayout.NORTH);
 		menuPanel.setLayout(null);
 
-		ImageIcon titleImage = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/mdcr3.png");
+		ImageIcon titleImage = new ImageIcon(getClass().getResource("/image/mdcr3.png"));
 		JLabel imageTitleLabel = new JLabel(titleImage);
 		imageTitleLabel.setBounds(25, 0, 141, 50);
 		menuPanel.add(imageTitleLabel);
@@ -487,18 +490,18 @@ public class ApplyFormView extends JFrame {
 		lblTitleBar.setFont(new Font("MS UI Gothic", Font.PLAIN, 20));
 		lblTitleBar.setBounds(216, 10, 340, 30);
 		menuPanel.add(lblTitleBar);
-		
+
 		JLabel lblChangePassword = new JLabel("Change Password");
 		lblChangePassword.setBounds(1300, 10, 340, 30);
 		lblChangePassword.setForeground(new Color(0xCCCCCC));
 		lblChangePassword.setFont(new Font("MS UI Gothic", Font.PLAIN, 15));
 		menuPanel.add(lblChangePassword);
-		
+
 		lblChangePassword.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				ChangePasswordView changePasswordView = new ChangePasswordView(loggedInId, ApplyFormView.this);
-                changePasswordView.setVisible(true);
+				changePasswordView.setVisible(true);
 			}
 
 			@Override
@@ -575,7 +578,7 @@ public class ApplyFormView extends JFrame {
 			public void itemStateChanged(ItemEvent e) {
 				if (ddlMajor.getSelectedItem().equals("Other")) {
 					txtMajor.setVisible(true);
-					txtMajor.setText("");
+					txtMajor.setText(majorPH);
 				} else {
 					txtMajor.setVisible(false);
 					txtMajor.setText("");
@@ -583,7 +586,6 @@ public class ApplyFormView extends JFrame {
 				}
 			}
 		});
-
 	}
 
 	// Check Validation
@@ -805,16 +807,17 @@ public class ApplyFormView extends JFrame {
 
 	// Clears all input fields in the form when the Cancel button is clicked
 	public void Clear() {
-		txtName.setText("");
-		txtFatherName.setText("");
-		txtPhone.setText("");
-		txtEducation.setText("");
-		txtMail.setText("");
-		txtMark.setText("");
-		txtMajor.setText("");
+		txtName.setText(namePH);
+		txtFatherName.setText(fatherNamePH);
+		txtPhone.setText(phonePH);
+		txtEducation.setText(eduPH);
+		txtMail.setText(mailPH);
+		txtMark.setText(markPH);
+		txtMajor.setText(majorPH);
 		txtAddress.setText("");
-		txtNRCView.setText("");
+		txtNRCView.setText(nrcPH);
 		txtDOB.setDate(null);
+		editor.setText(dobPH);
 		ddlMajor.setSelectedIndex(0);
 		rdoMale.setSelected(true);
 		rdoSingle.setSelected(true);

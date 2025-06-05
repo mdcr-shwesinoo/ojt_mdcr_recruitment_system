@@ -36,7 +36,7 @@ public class ApplySuccessView extends JFrame {
 		contentPane.setPreferredSize(new Dimension(650, 480));
 		contentPane.setBackground(SystemColor.inactiveCaption);
 		contentPane.setLayout(null);
-
+			
 		// Custom title bar panel (black bar)
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(0, 0, 0));
@@ -44,7 +44,7 @@ public class ApplySuccessView extends JFrame {
 		getContentPane().add(panel, BorderLayout.NORTH);
 		panel.setLayout(null);
 
-		ImageIcon titleImage = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/mdcr3.png");
+		ImageIcon titleImage = new ImageIcon(getClass().getResource("/image/mdcr3.png"));
 		JLabel imageTitleLabel = new JLabel(titleImage);
 		imageTitleLabel.setBounds(25, 0, 141, 50);
 		panel.add(imageTitleLabel);
@@ -56,7 +56,7 @@ public class ApplySuccessView extends JFrame {
 		panel.add(lblTitleBar);
 
 		// Load the image and create a JLabel
-		ImageIcon imageIcon = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/apply6.png");
+		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/apply6.png"));
 		JLabel imageLabel = new JLabel(imageIcon);
 		imageLabel.setBounds(117, 0, 384, 212); // Adjust the position as needed
 		contentPane.add(imageLabel);

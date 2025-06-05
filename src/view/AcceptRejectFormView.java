@@ -510,7 +510,7 @@ public class AcceptRejectFormView extends JFrame {
 		getContentPane().add(menuPanel, BorderLayout.NORTH);
 		menuPanel.setLayout(null);
 
-		ImageIcon titleImage = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/mdcr3.png");
+		ImageIcon titleImage = new ImageIcon(getClass().getResource("/image/mdcr3.png"));
 		JLabel imageTitleLabel = new JLabel(titleImage);
 		imageTitleLabel.setBounds(25, 0, 141, 50);
 		menuPanel.add(imageTitleLabel);

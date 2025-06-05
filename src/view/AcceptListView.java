@@ -5,6 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -59,8 +62,7 @@ public class AcceptListView extends JFrame {
 		titlePanel.setLayout(null);
 		contentPane.add(titlePanel);
 
-		ImageIcon titleImage = new ImageIcon(
-				"../ojt_mdcr_recruitment_system/src/image/mdcr3.png");
+		ImageIcon titleImage = new ImageIcon(getClass().getResource("/image/mdcr3.png"));
 		JLabel imageTitleLabel = new JLabel(titleImage);
 		imageTitleLabel.setBounds(25, 0, 141, 50);
 		titlePanel.add(imageTitleLabel);
@@ -80,25 +82,32 @@ public class AcceptListView extends JFrame {
 		lblTotalApplicants = new JLabel();
 		lblTotalApplicants.setFont(new Font("MS UI Gothic", Font.BOLD, 14));
 
-		JPanel formPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-		formPanel.setBorder(BorderFactory.createEmptyBorder(13, 5, 0, 5));
-		formPanel.setPreferredSize(new Dimension(540, 50));
-		JLabel lblSearch = new JLabel("Search NRC:");
+		JPanel formPanel = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(0, 10, 0, 10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		
+		gbc.gridx = 0;
+        gbc.gridy = 0;
+        JLabel lblSearch = new JLabel("Search NRC:");
 		lblSearch.setFont(new Font("MS UI Gothic", Font.BOLD, 14));
-		formPanel.add(lblSearch);
+		formPanel.add(lblSearch, gbc);
 
+		gbc.gridx++;
 		textField = new JTextField();
 		textField.setColumns(18);
-		formPanel.add(textField);
+		formPanel.add(textField, gbc);
 		// Buttons
 
+		gbc.gridx++;
 		JButton btnShowAll = Common.addActionButton("Show All");
 		btnShowAll.setPreferredSize(new Dimension(100, 30));
-		formPanel.add(btnShowAll);
+		formPanel.add(btnShowAll, gbc);
 
+		gbc.gridx++;
 		JButton btnBack = Common.addActionButton("Back");
-		formPanel.add(btnBack);
-
+		formPanel.add(btnBack, gbc);
+        
 		searchPanel.add(lblTotalApplicants, BorderLayout.WEST);
 		searchPanel.add(formPanel, BorderLayout.EAST);
 		contentPane.add(searchPanel);

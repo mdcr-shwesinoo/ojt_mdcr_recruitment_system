@@ -62,7 +62,7 @@ public class LoginView extends JFrame {
 		panelMenu.setLayout(null);
 		getContentPane().add(panelMenu, BorderLayout.NORTH);
 
-		ImageIcon titleImage = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/mdcr3.png");
+		ImageIcon titleImage = new ImageIcon(getClass().getResource("/image/mdcr3.png"));
 		JLabel imageTitleLabel = new JLabel(titleImage);
 		imageTitleLabel.setBounds(25, 0, 141, 50);
 		panelMenu.add(imageTitleLabel);
@@ -84,7 +84,7 @@ public class LoginView extends JFrame {
 		panelMenu.add(profileLabel);
 
 		// Load the image and create a JLabel
-		ImageIcon imageIcon = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/account.png");
+		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/account.png"));
 		panel.setLayout(null);
 		JLabel imageLabel = new JLabel(imageIcon);
 		imageLabel.setBounds(278, 21, imageIcon.getIconWidth(), imageIcon.getIconHeight());
@@ -221,8 +221,8 @@ public class LoginView extends JFrame {
 		btnToggle.setContentAreaFilled(false);
 		btnToggle.setBorderPainted(false);
 
-		iconShow = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/view.png");
-		iconHide = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/hide.png");
+		iconShow = new ImageIcon(getClass().getResource("/image/view.png"));
+		iconHide = new ImageIcon(getClass().getResource("/image/hide.png"));
 
 		// Resize icons
 		iconShow = new ImageIcon(iconShow.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));

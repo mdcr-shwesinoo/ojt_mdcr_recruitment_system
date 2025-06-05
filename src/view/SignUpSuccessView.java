@@ -65,7 +65,7 @@ public class SignUpSuccessView extends JFrame {
 		getContentPane().add(panel, BorderLayout.NORTH);
 		panel.setLayout(null);
 
-		ImageIcon titleImage = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/mdcr3.png");
+		ImageIcon titleImage = new ImageIcon(getClass().getResource("/image/mdcr3.png"));
 		JLabel imageTitleLabel = new JLabel(titleImage);
 		imageTitleLabel.setBounds(25, 0, 141, 50);
 		panel.add(imageTitleLabel);
@@ -77,7 +77,7 @@ public class SignUpSuccessView extends JFrame {
 		panel.add(lblTitleBar);
 
 		// Load the image and create a JLabel
-		ImageIcon imageIcon = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/SignUP1.png");
+		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/SignUP1.png"));
 		JLabel imageLabel = new JLabel(imageIcon);
 		imageLabel.setBounds(270, 27, 107, 87); // Adjust the position as needed
 		contentPane.add(imageLabel);

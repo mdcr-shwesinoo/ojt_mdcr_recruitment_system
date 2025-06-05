@@ -1,13 +1,9 @@
 package view;
 
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -16,409 +12,271 @@ import controller.UserAccountController;
 
 public class ChangePasswordView extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JPasswordField txtOldPassword;
-	private JPasswordField txtNewPassword;
-	private JPasswordField txtReEnterNewPassword;
-	private JButton btnSave;
-	private String currentUserEmail;
-	private String currentUserPassword;
-	private JFrame parent;
-	private ImageIcon iconShow, iconHide;
-	private JLabel rfvNewPassword, rfvOldPassword, rfvRePassword;
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JPasswordField txtOldPassword;
+    private JPasswordField txtNewPassword;
+    private JPasswordField txtReEnterNewPassword;
+    private JButton btnSave;
+    private String currentUserEmail;
+    private String currentUserPassword;
+    private JFrame parent;
+    private JLabel rfvNewPassword, rfvOldPassword, rfvRePassword;
+    private ImageIcon iconShow, iconHide;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChangePasswordView frame = new ChangePasswordView(1, new JFrame()); // from login
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                ChangePasswordView frame = new ChangePasswordView(1, new JFrame());
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
-	public ChangePasswordView(int id, JFrame parent) {
-		this.parent = parent;
-		UserAccountController controller = new UserAccountController();
-		var model = controller.findById(id);
-		this.currentUserEmail = model.getEmail();
-		this.currentUserPassword = model.getPassword();
-		setTitle("Change Password");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 600, 370);
-		setLocationRelativeTo(null);
+    public ChangePasswordView(int id, JFrame parent) {
+        this.parent = parent;
+        UserAccountController controller = new UserAccountController();
+        var model = controller.findById(id);
+        this.currentUserEmail = model.getEmail();
+        this.currentUserPassword = model.getPassword();
 
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-		setContentPane(contentPane);
-		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        setTitle("Change Password");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(600, 400);
+        setLocationRelativeTo(null);
 
-		JPanel titlePanel = new JPanel(new BorderLayout());
-		titlePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-		titlePanel.setBackground(Color.BLACK);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        setContentPane(contentPane);
 
-		JLabel lblChangePassword = new JLabel("Change Password");
-		lblChangePassword.setForeground(Color.WHITE);
-		lblChangePassword.setFont(new Font("Arial", Font.BOLD, 16));
-		lblChangePassword.setBorder(new EmptyBorder(10, 10, 10, 10));
-		titlePanel.add(lblChangePassword, BorderLayout.WEST);
+        initIcons();
+        addTitlePanel();
+        addFields();
+        addButtonPanel();
+    }
 
-		JPanel fieldPanel = new JPanel();
-		fieldPanel.setLayout(new GridBagLayout());
-		fieldPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(10, 10, 0, 10);
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+    private void initIcons() {
+        iconShow = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/view.png");
+        iconHide = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/hide.png");
+        iconShow = new ImageIcon(iconShow.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+        iconHide = new ImageIcon(iconHide.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+    }
 
-		// Old Password
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		JLabel lblOldPassword = new JLabel("Old Password:");
-		lblOldPassword.setFont(new Font("Arial", Font.PLAIN, 14));
-		fieldPanel.add(lblOldPassword, gbc);
+    private void addTitlePanel() {
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setBackground(Color.BLACK);
+        titlePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
 
-		gbc.gridx = 1;
-		gbc.gridy = 0;
-		JPanel passwordPanel = new JPanel();
-		passwordPanel.setBounds(125, 184, 250, 36);
-		passwordPanel.setLayout(new BorderLayout());
-		fieldPanel.add(passwordPanel, gbc);
+        JLabel lblTitle = new JLabel("Change Password");
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 16));
+        lblTitle.setForeground(Color.WHITE);
+        lblTitle.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-		txtOldPassword = new JPasswordField(15);
-		stylePasswordField(txtOldPassword);
-		txtOldPassword.setEchoChar('*');
-		fieldPanel.add(txtOldPassword, gbc);
-		setPlaceholder(txtOldPassword, "Enter old password");
-//		txtOldPassword.setBorder(BorderFactory.createEmptyBorder());
-		txtOldPassword.setBackground(Color.WHITE);
-		passwordPanel.add(txtOldPassword, BorderLayout.CENTER);
-		
-		gbc.gridx = 1;
-		gbc.gridy = 1;
-		gbc.insets = new Insets(0, 10, 10, 10);
-		rfvOldPassword = new JLabel(" ");
-		rfvOldPassword.setForeground(Color.red);
-		fieldPanel.add(rfvOldPassword, gbc);
+        titlePanel.add(lblTitle, BorderLayout.WEST);
+        contentPane.add(titlePanel);
+        contentPane.add(Box.createVerticalStrut(20));
+    }
 
-		// Eye icon button for toggling visibility
-		JButton btnToggle = new JButton();
-		btnToggle.setPreferredSize(new Dimension(40, 30));
-		btnToggle.setFocusPainted(false);
-		btnToggle.setContentAreaFilled(false);
-		btnToggle.setBorderPainted(false);
+    private void addFields() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 0, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-		btnToggle.setOpaque(true);
-		btnToggle.setBackground(new Color(230, 230, 235));
+        // Old Password
+        txtOldPassword = new JPasswordField(15);
+        txtOldPassword.setEchoChar('*');
+        addPasswordField(panel, gbc, 0, "Old Password:", txtOldPassword, rfvOldPassword = new JLabel(" "), true);
 
-		iconShow = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/view.png");
-		iconHide = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/hide.png");
+        // New Password
+        txtNewPassword = new JPasswordField(15);
+        txtNewPassword.setEchoChar('*');
+        addPasswordField(panel, gbc, 2, "New Password:", txtNewPassword, rfvNewPassword = new JLabel(" "), true);
 
-		// Resize icons
-		iconShow = new ImageIcon(iconShow.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-		iconHide = new ImageIcon(iconHide.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-		btnToggle.setIcon(iconHide);
+        // Re-enter New Password
+        txtReEnterNewPassword = new JPasswordField(15);
+        txtReEnterNewPassword.setEchoChar('*');
+        addPasswordField(panel, gbc, 4, "Re-enter New Password:", txtReEnterNewPassword, rfvRePassword = new JLabel(" "), true);
 
-		btnToggle.addActionListener(e -> {
-			if (txtOldPassword.getEchoChar() != (char) 0) {
-				txtOldPassword.setEchoChar((char) 0); // show password
-				btnToggle.setIcon(iconShow);
-			} else {
-				txtOldPassword.setEchoChar('*'); // hide password
-				btnToggle.setIcon(iconHide);
-			}
-		});
-		passwordPanel.add(btnToggle, BorderLayout.EAST);
+        contentPane.add(panel);
+        contentPane.add(Box.createVerticalStrut(10));
+    }
 
-//      		//New Password
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		JLabel lblNewPassword = new JLabel("New Password:");
-		lblNewPassword.setFont(new Font("Arial", Font.PLAIN, 14));
-		fieldPanel.add(lblNewPassword, gbc);
+    private void addPasswordField(JPanel panel, GridBagConstraints gbc, int row, String labelText, JPasswordField passwordField, JLabel validationLabel, boolean withToggle) {
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Arial", Font.PLAIN, 14));
+        panel.add(label, gbc);
 
-		gbc.gridx = 1;
-		gbc.gridy = 2;
-		JPanel newPasswordPanel = new JPanel();
-		newPasswordPanel.setBounds(125, 184, 250, 36);
-		newPasswordPanel.setLayout(new BorderLayout());
-		fieldPanel.add(newPasswordPanel, gbc);
+        gbc.gridx = 1;
+        JPanel fieldPanel = new JPanel(new BorderLayout());
+        fieldPanel.setPreferredSize(new Dimension(250, 30));
+        stylePasswordField(passwordField);
+        fieldPanel.add(passwordField, BorderLayout.CENTER);
+        //setPlaceholder(passwordField, "Enter " + labelText.toLowerCase());
+        Common.setPlaceholder(passwordField, "Enter " + labelText.toLowerCase());
 
-		txtNewPassword = new JPasswordField(15);
-		stylePasswordField(txtNewPassword);
-		txtNewPassword.setEchoChar('*');
-		fieldPanel.add(txtNewPassword, gbc);
-		setPlaceholder(txtNewPassword, "Enter new password");
-//		txtNewPassword.setBorder(BorderFactory.createEmptyBorder());
-		txtNewPassword.setBackground(Color.WHITE);
-		newPasswordPanel.add(txtNewPassword, BorderLayout.CENTER);
-		
-		gbc.gridx = 1;
-		gbc.gridy = 3;
-		gbc.insets = new Insets(0, 10, 0, 10);
-		rfvNewPassword = new JLabel(" ");
-		rfvNewPassword.setForeground(Color.red);
-		fieldPanel.add(rfvNewPassword, gbc);
+        if (withToggle) {
+            JButton toggleBtn = createEyeButton(passwordField);
+            fieldPanel.add(toggleBtn, BorderLayout.EAST);
+        }
 
-		// Eye icon button for toggling visibility
-		JButton btnToggleNewPWS = new JButton();
-		btnToggleNewPWS.setPreferredSize(new Dimension(40, 30));
-		btnToggleNewPWS.setFocusPainted(false);
-		btnToggleNewPWS.setContentAreaFilled(false);
-		btnToggleNewPWS.setBorderPainted(false);
+        panel.add(fieldPanel, gbc);
 
-		btnToggleNewPWS.setOpaque(true);
-		btnToggleNewPWS.setBackground(new Color(230, 230, 235));
+        gbc.gridy = row + 1;
+        validationLabel.setForeground(Color.RED);
+        validationLabel.setText(" ");
+        panel.add(validationLabel, gbc);
+    }
 
-		iconShow = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/view.png");
-		iconHide = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/hide.png");
+    private JButton createEyeButton(JPasswordField pwdField) {
+        JButton btnToggle = new JButton(iconHide);
+        btnToggle.setPreferredSize(new Dimension(40, 30));
+        btnToggle.setFocusPainted(false);
+        btnToggle.setContentAreaFilled(false);
+        btnToggle.setBorderPainted(false);
+        btnToggle.setOpaque(true);
+        btnToggle.setBackground(new Color(230, 230, 235));
 
-		// Resize icons
-		iconShow = new ImageIcon(iconShow.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-		iconHide = new ImageIcon(iconHide.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-		btnToggleNewPWS.setIcon(iconHide);
+        btnToggle.addActionListener(e -> {
+            if (pwdField.getEchoChar() == (char) 0) {
+                pwdField.setEchoChar('*');
+                btnToggle.setIcon(iconHide);
+            } else {
+                pwdField.setEchoChar((char) 0);
+                btnToggle.setIcon(iconShow);
+            }
+        });
 
-		btnToggleNewPWS.addActionListener(e -> {
-			if (txtNewPassword.getEchoChar() != (char) 0) {
-				txtNewPassword.setEchoChar((char) 0); // show password
-				btnToggleNewPWS.setIcon(iconShow);
-			} else {
-				txtNewPassword.setEchoChar('*'); // hide password
-				btnToggleNewPWS.setIcon(iconHide);
-			}
-		});
-		newPasswordPanel.add(btnToggleNewPWS, BorderLayout.EAST);
+        return btnToggle;
+    }
 
-		gbc.gridx = 0;
-		gbc.gridy = 4;
-		JLabel lblReEnterNewPassword = new JLabel("Re-enter New Password:");
-		lblReEnterNewPassword.setFont(new Font("Arial", Font.PLAIN, 14));
-		fieldPanel.add(lblReEnterNewPassword, gbc);
+    private void addButtonPanel() {
+        JPanel buttonPanel = new JPanel();
+        btnSave = Common.addActionButton("Save");
+        btnSave.setPreferredSize(new Dimension(100, 30));
+        btnSave.addActionListener(e -> handleChangePassword());
+        buttonPanel.add(btnSave);
+        contentPane.add(buttonPanel);
+        contentPane.add(Box.createVerticalGlue());
+    }
 
-		gbc.gridx = 1;
-		gbc.gridy = 4;
-		JPanel rePasswordPanel = new JPanel();
-		rePasswordPanel.setBounds(125, 184, 250, 36);
-		rePasswordPanel.setLayout(new BorderLayout());
-		fieldPanel.add(rePasswordPanel, gbc);
+    private void stylePasswordField(JPasswordField passwordField) {
+        passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        passwordField.setBackground(new Color(245, 245, 245));
+        passwordField.setBorder(new CompoundBorder(new LineBorder(new Color(200, 200, 200), 1, true),
+                new EmptyBorder(4, 8, 4, 8)));
+    }
 
-		txtReEnterNewPassword = new JPasswordField(15);
-		stylePasswordField(txtReEnterNewPassword);
-		txtReEnterNewPassword.setEchoChar('*');
-		fieldPanel.add(txtReEnterNewPassword, gbc);
-		setPlaceholder(txtReEnterNewPassword, "Re - enter new password");
-//		txtReEnterNewPassword.setBorder(BorderFactory.createEmptyBorder());
-		txtReEnterNewPassword.setBackground(Color.WHITE);
-		rePasswordPanel.add(txtReEnterNewPassword, BorderLayout.CENTER);
-		
-		gbc.gridx = 1;
-		gbc.gridy = 5;
-		gbc.insets = new Insets(0, 10, 10, 10);
-		rfvRePassword = new JLabel(" ");
-		rfvRePassword.setForeground(Color.red);
-		fieldPanel.add(rfvRePassword, gbc);
+    public void setPlaceholder(JPasswordField passwordField, String placeholder) {
+        final char defaultEchoChar = '*';
+        final Color placeholderColor = Color.GRAY;
+        final Color inputColor = Color.BLACK;
 
-		// Eye icon button for toggling visibility
-		JButton btnToggleRePWS = new JButton();
-		btnToggleRePWS.setPreferredSize(new Dimension(40, 30));
-		btnToggleRePWS.setFocusPainted(false);
-		btnToggleRePWS.setContentAreaFilled(false);
-		btnToggleRePWS.setBorderPainted(false);
+        // State to track if placeholder is currently shown
+        final boolean[] isShowingPlaceholder = {true};
 
-		btnToggleRePWS.setOpaque(true);
-		btnToggleRePWS.setBackground(new Color(230, 230, 235));
+        // Initially show placeholder
+        passwordField.setText(placeholder);
+        passwordField.setForeground(placeholderColor);
+        passwordField.setEchoChar((char) 0);
 
-		iconShow = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/view.png");
-		iconHide = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/hide.png");
+        passwordField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (isShowingPlaceholder[0]) {
+                    passwordField.setText("");
+                    passwordField.setForeground(inputColor);
+                    passwordField.setEchoChar(defaultEchoChar);
+                    isShowingPlaceholder[0] = false;
+                }
+            }
 
-		// Resize icons
-		iconShow = new ImageIcon(iconShow.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-		iconHide = new ImageIcon(iconHide.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-		btnToggleRePWS.setIcon(iconHide);
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (passwordField.getPassword().length == 0) {
+                    passwordField.setText(placeholder);
+                    passwordField.setForeground(placeholderColor);
+                    passwordField.setEchoChar((char) 0);
+                    isShowingPlaceholder[0] = true;
+                }
+            }
+        });
 
-		btnToggleRePWS.addActionListener(e -> {
-			if (txtReEnterNewPassword.getEchoChar() != (char) 0) {
-				txtReEnterNewPassword.setEchoChar((char) 0); // show password
-				btnToggleRePWS.setIcon(iconShow);
-			} else {
-				txtReEnterNewPassword.setEchoChar('*'); // hide password
-				btnToggleRePWS.setIcon(iconHide);
-			}
-		});
-		rePasswordPanel.add(btnToggleRePWS, BorderLayout.EAST);
+        // Optional: handle typing while placeholder is showing
+        passwordField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (isShowingPlaceholder[0]) {
+                    passwordField.setText("");
+                    passwordField.setForeground(inputColor);
+                    passwordField.setEchoChar(defaultEchoChar);
+                    isShowingPlaceholder[0] = false;
+                }
+            }
+        });
+    }
 
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		btnSave = Common.addActionButton("Save");
-		btnSave.setFont(new Font("Arial", Font.PLAIN, 13));
-		btnSave.setPreferredSize(new Dimension(100, 30));
-		btnSave.addActionListener(e -> handleChangePassword());
-		buttonPanel.add(btnSave);
 
-		contentPane.add(titlePanel);
-		contentPane.add(Box.createVerticalStrut(20));
-		contentPane.add(fieldPanel);
-		contentPane.add(Box.createVerticalStrut(10));
-		contentPane.add(buttonPanel);
-		contentPane.add(Box.createVerticalGlue());
-	}
+    private void handleChangePassword() {
+        String oldPwdInput = String.valueOf(txtOldPassword.getPassword()).trim();
+        String newPwd = String.valueOf(txtNewPassword.getPassword()).trim();
+        String reEnterNewPwd = String.valueOf(txtReEnterNewPassword.getPassword()).trim();
 
-	private void stylePasswordField(JPasswordField passwordField) {
-		passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-		passwordField.setBackground(new Color(245, 245, 245));
-		passwordField.setBorder(
-				new CompoundBorder(new LineBorder(new Color(200, 200, 200), 1, true), new EmptyBorder(4, 8, 4, 8)));
-	}
-
-	private void setPlaceholder(JPasswordField passwordField, String placeholder) {
-
-		final char defaultEchoChar = passwordField.getEchoChar();
-
-		// Initially set placeholder
-		passwordField.setEchoChar((char) 0);
-		passwordField.setForeground(Color.GRAY);
-		passwordField.setText(placeholder);
-
-		passwordField.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				String text = String.valueOf(passwordField.getPassword());
-				if (text.equals(placeholder)) {
-					passwordField.setCaretPosition(0);
-				}
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				String text = String.valueOf(passwordField.getPassword());
-				if (text.isEmpty()) {
-					passwordField.setEchoChar((char) 0);
-					passwordField.setForeground(Color.GRAY);
-					passwordField.setText(placeholder);
-				}
-			}
-		});
-
-		passwordField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-			private void update() {
-				SwingUtilities.invokeLater(() -> {
-					String currentText = String.valueOf(passwordField.getPassword());
-
-					if (currentText.isEmpty()) {
-						passwordField.setEchoChar((char) 0);
-						passwordField.setForeground(Color.GRAY);
-						passwordField.setText(placeholder);
-						passwordField.setCaretPosition(0);
-					} else if (!currentText.equals(placeholder)) {
-						passwordField.setForeground(Color.BLACK);
-						passwordField.setEchoChar(defaultEchoChar);
-					}
-				});
-			}
-
-			public void insertUpdate(javax.swing.event.DocumentEvent e) {
-				update();
-			}
-
-			public void removeUpdate(javax.swing.event.DocumentEvent e) {
-				update();
-			}
-
-			public void changedUpdate(javax.swing.event.DocumentEvent e) {
-				update();
-			}
-		});
-
-		passwordField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (passwordField.getForeground().equals(Color.GRAY)
-						&& String.valueOf(passwordField.getPassword()).equals(placeholder)) {
-
-					if (e.getKeyChar() != KeyEvent.CHAR_UNDEFINED && !Character.isISOControl(e.getKeyChar())) {
-						passwordField.setText("");
-						passwordField.setForeground(Color.BLACK);
-						passwordField.setEchoChar(defaultEchoChar);
-					}
-				}
-			}
-		});
-	}
-
-	private void handleChangePassword() {
-		String oldPwdInput = String.valueOf(txtOldPassword.getPassword()).trim();
-		String newPwd = String.valueOf(txtNewPassword.getPassword()).trim();
-		String reEnterNewPwd = String.valueOf(txtReEnterNewPassword.getPassword()).trim();
-		
-		if (oldPwdInput.equals("Enter old password") || newPwd.equals("Enter new password") || reEnterNewPwd.equals("Re - enter new password")) {
-			rfvRePassword.setText("Please fill in all fields.");
-			return;
-		}
-
-		// Check if old password matches
-		if (!oldPwdInput.equals(currentUserPassword) && !oldPwdInput.equals("Enter old password")) {
-			rfvOldPassword.setText("Old password is incorrect.");
-			rfvRePassword.setText(" ");
-//			JOptionPane.showMessageDialog(this, "Old password is incorrect.", "Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		// Check if new password fields match
-		if (!newPwd.equals(reEnterNewPwd)) {
-			rfvRePassword.setText("New passwords do not match.");
-			rfvOldPassword.setText(" ");
-//			JOptionPane.showMessageDialog(this, "New passwords do not match.", "Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		// Basic validation: not empty
-		if (newPwd.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "New password cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		
-		if (newPwd.equals(oldPwdInput)) {
-			rfvRePassword.setText("New password cannot be the same as the old password.");
-//            JOptionPane.showMessageDialog(this, "New password cannot be the same as the old password.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (oldPwdInput.isEmpty() || newPwd.isEmpty() || reEnterNewPwd.isEmpty()
+                || oldPwdInput.equalsIgnoreCase("Enter old password")
+                || newPwd.equalsIgnoreCase("Enter new password")
+                || reEnterNewPwd.equalsIgnoreCase("Re-enter new password")) {
+            rfvRePassword.setText("Please fill in all fields.");
             return;
         }
 
-		// Validate new password pattern
-		if (!newPwd.matches("^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[@$!%*#?&]).{7,}$")) {
-			JOptionPane.showMessageDialog(this,
-					"New password must be at least 7 characters and include at least one letter, one number, and one special character (@$!%*#?&).",
-					"Invalid Password", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
+        if (!oldPwdInput.equals(currentUserPassword)) {
+            rfvOldPassword.setText("Old password is incorrect.");
+            return;
+        } else {
+            rfvOldPassword.setText(" ");
+        }
 
-		// Update in database
-		try (Connection conn = config.DBConfig.getConnection()) {
-			String sql = "UPDATE useraccount SET user_password = ? WHERE user_email = ?";
-			try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-				stmt.setString(1, newPwd);
-				stmt.setString(2, currentUserEmail);
+        if (!newPwd.equals(reEnterNewPwd)) {
+            rfvRePassword.setText("New passwords do not match.");
+            return;
+        }
 
-				int updated = stmt.executeUpdate();
-				if (updated > 0) {
-					JOptionPane.showMessageDialog(this, "Password changed successfully.");
-					currentUserPassword = newPwd;
-					LoginView loginView = new LoginView();
-					loginView.setExtendedState(JFrame.MAXIMIZED_BOTH);
-					loginView.setVisible(true);
-					parent.dispose();
-					dispose();
-				} else {
-					JOptionPane.showMessageDialog(this, "Failed to update password.", "Error",
-							JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage(), "Error",
-					JOptionPane.ERROR_MESSAGE);
-		}
-	}
+        if (newPwd.equals(oldPwdInput)) {
+            rfvRePassword.setText("New password cannot be the same as the old password.");
+            return;
+        }
 
+        if (!newPwd.matches("^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[@$!%*#?&]).{7,}$")) {
+            rfvRePassword.setText("<html>Password must be at least 7 length<br>& numbers & special char.</html>");
+            return;
+        }
+
+        try (Connection conn = config.DBConfig.getConnection()) {
+            String sql = "UPDATE useraccount SET user_password = ? WHERE user_email = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, newPwd);
+                stmt.setString(2, currentUserEmail);
+
+                int updated = stmt.executeUpdate();
+                if (updated > 0) {
+                    JOptionPane.showMessageDialog(this, "Password changed successfully.");
+                    currentUserPassword = newPwd;
+                    new LoginView().setVisible(true);
+                    parent.dispose();
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Failed to update password.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

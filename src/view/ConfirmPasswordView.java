@@ -96,8 +96,8 @@ public class ConfirmPasswordView extends JFrame {
 		btnToggle.setOpaque(true);
 		btnToggle.setBackground(new Color(230,230,235));
 		
-		iconShow = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/view.png");
-		iconHide = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/hide.png");
+		iconShow = new ImageIcon(getClass().getResource("/image/view.png"));
+		iconHide = new ImageIcon(getClass().getResource("/image/hide.png"));
  
 		// Resize icons
 		iconShow = new ImageIcon(iconShow.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
@@ -138,8 +138,8 @@ public class ConfirmPasswordView extends JFrame {
 		btnToggleConfirm.setBorderPainted(false);
 		btnToggleConfirm.setBackground(new Color(225,0, 0));
 		
-		iconShow = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/view.png");
-		iconHide = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/hide.png");
+		iconShow = new ImageIcon(getClass().getResource("/image/view.png"));
+		iconHide = new ImageIcon(getClass().getResource("/image/hide.png"));
  
 		// Resize icons
 		iconShow = new ImageIcon(iconShow.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
