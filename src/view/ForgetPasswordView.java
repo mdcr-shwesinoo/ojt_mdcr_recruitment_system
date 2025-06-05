@@ -85,7 +85,8 @@ public class ForgetPasswordView extends JFrame {
 
         gbc.gridx = 2;
         gbc.gridy = 0;
-        btnGetOtp = Common.addActionButton("Get OTP");
+        btnGetOtp = Common.addActionButton("Wait 60s");
+        btnGetOtp.setPreferredSize(new Dimension(90, 30));
         btnGetOtp.setFont(new Font("Arial", Font.PLAIN, 12));
         fieldPanel.add(btnGetOtp, gbc);
 

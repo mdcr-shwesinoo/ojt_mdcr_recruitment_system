@@ -3,14 +3,12 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,6 +24,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import config.Common;
 import controller.ApplicantController;
@@ -77,6 +76,7 @@ public class AcceptListView extends JFrame {
 
 		// Labels and TextField
 		JPanel searchPanel = new JPanel(new BorderLayout());
+		searchPanel.setBorder(new EmptyBorder(0, 30, 0, 30));
 		searchPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, 50));
 		searchPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
 		lblTotalApplicants = new JLabel();
@@ -96,6 +96,7 @@ public class AcceptListView extends JFrame {
 		gbc.gridx++;
 		textField = new JTextField();
 		textField.setColumns(18);
+		textField.setPreferredSize(new Dimension(180, 30));
 		formPanel.add(textField, gbc);
 		// Buttons
 
@@ -154,6 +155,8 @@ public class AcceptListView extends JFrame {
 		tableModel = new DefaultTableModel(columns, 0);
 		table = new JTable(tableModel);
 		table.setRowHeight(30);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
 		table.getTableHeader().setPreferredSize(new Dimension(table.getColumnModel().getColumn(0).getWidth(), 30));
 		table.getTableHeader().getColorModel();
 
@@ -161,8 +164,18 @@ public class AcceptListView extends JFrame {
 		table.getTableHeader().setBackground(new Color(94, 148, 255));
 		table.getTableHeader().setForeground(new Color(255, 255, 255));
 		table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+		
+		// Adjust column widths
+        TableColumn column;
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            column = table.getColumnModel().getColumn(i);
+            column.setPreferredWidth(250); // Set column width (change this value as needed)
+        }
+		
 
-		JScrollPane scrollPane = new JScrollPane(table);
+		JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setBorder(new EmptyBorder(0, 30, 0, 30));
 //		scrollPane.setBounds(0, 104, 1550, 645);
 //		getContentPane().add(scrollPane);
 		contentPane.add(scrollPane);

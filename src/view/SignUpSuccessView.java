@@ -91,7 +91,7 @@ public class SignUpSuccessView extends JFrame {
 		JLabel lblCongratolation = new JLabel(
 				"Congratulations , your account has  been successfully created.");
 		lblCongratolation.setHorizontalAlignment(SwingConstants.LEFT);
-		lblCongratolation.setBounds(167, 202, 330, 32);
+		lblCongratolation.setBounds(167, 202, 380, 32);
 		contentPane.add(lblCongratolation);
 
 		wrapper.add(contentPane);

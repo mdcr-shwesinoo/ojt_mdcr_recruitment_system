@@ -44,7 +44,7 @@ public class ChangePasswordView extends JFrame {
 
         setTitle("Change Password");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 400);
+        setSize(600, 380);
         setLocationRelativeTo(null);
 
         contentPane = new JPanel();
@@ -158,6 +158,7 @@ public class ChangePasswordView extends JFrame {
     private void addButtonPanel() {
         JPanel buttonPanel = new JPanel();
         btnSave = Common.addActionButton("Save");
+        
         btnSave.setPreferredSize(new Dimension(100, 30));
         btnSave.addActionListener(e -> handleChangePassword());
         buttonPanel.add(btnSave);

@@ -31,6 +31,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
@@ -297,6 +298,14 @@ public class ApplicantListView extends JFrame {
 		table.getTableHeader().setBackground(new Color(94, 148, 255));
 		table.getTableHeader().setForeground(new Color(255, 255, 255));
 		table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+		
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        table.getColumnModel().getColumn(0).setCellRenderer(rightRenderer);
+        
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);
+		table.getColumnModel().getColumn(0).setMinWidth(50);
+		table.getColumnModel().getColumn(0).setMaxWidth(50);
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setColumnHeaderView(table.getTableHeader());

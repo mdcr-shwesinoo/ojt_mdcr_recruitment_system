@@ -2,34 +2,27 @@ package view;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
+import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.border.*;
 
 import config.Common;
 
-import java.sql.*;
-import java.util.regex.Pattern;
-
 public class ConfirmPasswordView extends JFrame {
 
     private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
-    private JPanel fieldPanel;
-    private JPasswordField txtNewPassword;
-    private JPasswordField txtConfirmPassword;
-    private ImageIcon iconShow;
-    private ImageIcon iconHide;
+    private JPanel contentPane, fieldPanel;
+    private JPasswordField txtNewPassword, txtConfirmPassword;
     private JLabel rfvAllFields;
-
-
     private String userEmail;
 
-    // Database
-    private final String dbUrl = "jdbc:mysql://localhost:3306/mdcrrecruitment";
-    private final String dbUsername = "root";
-    private final String dbPassword = "";
+    // Icon placeholders
+    private ImageIcon iconShow;
+    private ImageIcon iconHide;
 
-    // Password validation
+
+    // Password regex
     private final String passwordRegex = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[@$!%*#?&]).{7,}$";
 
     public ConfirmPasswordView(String email) {
@@ -37,15 +30,30 @@ public class ConfirmPasswordView extends JFrame {
 
         setTitle("Reset Password");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 600, 300); // Increased width for better layout
+        setBounds(100, 100, 600, 325);
         setLocationRelativeTo(null);
+        setResizable(false); // Optional: fix window size
+
+        loadIcons();
 
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        setContentPane(contentPane);
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        setContentPane(contentPane);
 
-        // Title Panel
+        addTitlePanel();
+        addFormPanel();
+    }
+
+    private void loadIcons() {
+        iconShow = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/view.png");
+        iconHide = new ImageIcon("../ojt_mdcr_recruitment_system/src/image/hide.png");
+
+        iconShow = new ImageIcon(iconShow.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+        iconHide = new ImageIcon(iconHide.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+    }
+
+    private void addTitlePanel() {
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
         titlePanel.setBackground(Color.BLACK);
@@ -54,147 +62,102 @@ public class ConfirmPasswordView extends JFrame {
         lblTitle.setForeground(Color.WHITE);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 16));
         lblTitle.setBorder(new EmptyBorder(10, 10, 10, 10));
-        titlePanel.add(lblTitle, BorderLayout.WEST);
 
-        // Field Panel
-        fieldPanel = new JPanel();
-        fieldPanel.setLayout(new GridBagLayout());
-        fieldPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
+        titlePanel.add(lblTitle, BorderLayout.WEST);
+        contentPane.add(titlePanel);
+        contentPane.add(Box.createVerticalStrut(20));
+    }
+
+    private void addFormPanel() {
+        fieldPanel = new JPanel(new GridBagLayout());
+        fieldPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // New Password Label
         gbc.gridx = 0;
         gbc.gridy = 0;
-        JLabel lblNewPass = new JLabel("New Password:");
-        lblNewPass.setFont(new Font("Arial", Font.PLAIN, 14));
-        fieldPanel.add(lblNewPass, gbc);
+        fieldPanel.add(new JLabel("New Password:"), gbc);
 
+        // New Password Field with toggle
         gbc.gridx = 1;
-        gbc.gridy = 0;
+        JPanel newPassPanel = createPasswordFieldPanel(txtNewPassword = new JPasswordField(), "Enter new password", iconHide, iconShow);
+        fieldPanel.add(newPassPanel, gbc);
 
-        JPanel passwordPanel = new JPanel();
-		passwordPanel.setBounds(125, 184, 250, 36);
-		passwordPanel.setLayout(new BorderLayout());
-		fieldPanel.add(passwordPanel, gbc);
- 
-		txtNewPassword = new JPasswordField(15);
-		stylePasswordField(txtNewPassword);
-		txtNewPassword.setEchoChar('*');
-		setPlaceholder(txtNewPassword, "Enter new password");
-//		txtNewPassword.setBorder(BorderFactory.createEmptyBorder());
-		txtNewPassword.setBackground(Color.WHITE);
-		passwordPanel.add(txtNewPassword, BorderLayout.CENTER);
-		
-		// Eye icon button for toggling visibility
-		JButton btnToggle = new JButton();
-		btnToggle.setPreferredSize(new Dimension(40, 30));
-		btnToggle.setFocusPainted(false);
-		btnToggle.setContentAreaFilled(false);
-		btnToggle.setBorderPainted(false);
-		
-		btnToggle.setOpaque(true);
-		btnToggle.setBackground(new Color(230,230,235));
-		
-		iconShow = new ImageIcon(getClass().getResource("/image/view.png"));
-		iconHide = new ImageIcon(getClass().getResource("/image/hide.png"));
- 
-		// Resize icons
-		iconShow = new ImageIcon(iconShow.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-		iconHide = new ImageIcon(iconHide.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-		btnToggle.setIcon(iconHide); // initially password hidden
- 
-		btnToggle.addActionListener(e -> {
-			if (txtNewPassword.getEchoChar() != (char) 0) {
-				txtNewPassword.setEchoChar((char) 0); // show password
-				btnToggle.setIcon(iconShow);
-			} else {
-				txtNewPassword.setEchoChar('*'); // hide password
-				btnToggle.setIcon(iconHide);
-			}
-		});
- 
-		passwordPanel.add(btnToggle, BorderLayout.EAST);
- 
-		
+        // Confirm Password Label
         gbc.gridx = 0;
         gbc.gridy = 1;
-        JLabel lblConfirmPass = new JLabel("Confirm Password:");
-        lblConfirmPass.setFont(new Font("Arial", Font.PLAIN, 14));
-        fieldPanel.add(lblConfirmPass, gbc);
- 
+        fieldPanel.add(new JLabel("Confirm Password:"), gbc);
+
+        // Confirm Password Field with toggle
         gbc.gridx = 1;
-        gbc.gridy = 1;
-        JPanel passwordPanel1 = new JPanel();
-        passwordPanel1.setBounds(125, 184, 250, 36);
-        passwordPanel1.setLayout(new BorderLayout());
-		fieldPanel.add(passwordPanel1, gbc);
- 
-		// Eye icon button for toggling visibility
-		JButton btnToggleConfirm = new JButton();
-		btnToggleConfirm.setPreferredSize(new Dimension(40, 30));
-		btnToggleConfirm.setFocusPainted(false);
-		btnToggleConfirm.setContentAreaFilled(false);
-		btnToggleConfirm.setBorderPainted(false);
-		btnToggleConfirm.setBackground(new Color(225,0, 0));
-		
-		iconShow = new ImageIcon(getClass().getResource("/image/view.png"));
-		iconHide = new ImageIcon(getClass().getResource("/image/hide.png"));
- 
-		// Resize icons
-		iconShow = new ImageIcon(iconShow.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-		iconHide = new ImageIcon(iconHide.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-		btnToggleConfirm.setIcon(iconHide); // initially password hidden
- 
-		btnToggleConfirm.addActionListener(e -> {
-			if (txtConfirmPassword.getEchoChar() != (char) 0) {
-				txtConfirmPassword.setEchoChar((char) 0); // show password
-				btnToggleConfirm.setIcon(iconShow);
-			} else {
-				txtConfirmPassword.setEchoChar('*'); // hide password
-				btnToggleConfirm.setIcon(iconHide);
-			}
-		});
-		btnToggleConfirm.setBackground(Color.red);
- 
-		passwordPanel1.add(btnToggleConfirm, BorderLayout.EAST);
- 
-		txtConfirmPassword = new JPasswordField(15);
-		stylePasswordField(txtConfirmPassword);
-		txtConfirmPassword.setEchoChar('*');
-		setPlaceholder(txtConfirmPassword, "Confirm new password");
-		passwordPanel1.add(txtConfirmPassword, BorderLayout.CENTER);
-//		txtConfirmPassword.setBorder(BorderFactory.createEmptyBorder());
-		txtConfirmPassword.setBackground(Color.WHITE);
-		passwordPanel1.setBackground(new Color(220,220,220));
-    	
-    	gbc.gridx = 1;
-    	gbc.gridy = 2;
-    	gbc.insets = new Insets(0, 0, 0, 0);
-    	rfvAllFields = new JLabel(" ");
-    	rfvAllFields.setForeground(Color.red);
-    	fieldPanel.add(rfvAllFields, gbc);
-    	
-    	
-    	
-		
-        // Button Panel
-    	gbc.gridx = 1;
-    	gbc.gridy = 3;
+        gbc.insets = new Insets(10, 10, 0, 10);
+        JPanel confirmPassPanel = createPasswordFieldPanel(txtConfirmPassword = new JPasswordField(), "Confirm new password", iconHide, iconShow);
+        fieldPanel.add(confirmPassPanel, gbc);
+
+        // Error label with fixed size to prevent layout jump
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(0, 10, 0, 0);
+        rfvAllFields = new JLabel(" ");
+        rfvAllFields.setForeground(Color.RED);
+        rfvAllFields.setPreferredSize(new Dimension(250, 40)); // Reserve space
+        rfvAllFields.setMinimumSize(new Dimension(250, 40));
+        rfvAllFields.setMaximumSize(new Dimension(Short.MAX_VALUE, 40));
+        fieldPanel.add(rfvAllFields, gbc);
+
+        // Save button panel
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.insets = new Insets(0, 10, 10, 10);
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton btnSave = Common.addActionButton("Save");
-        btnSave.setPreferredSize(new Dimension(100, 30));
+        btnSave.setPreferredSize(new Dimension(130, 30));
+        btnSave.addActionListener(e -> handleChangePassword());
         buttonPanel.add(btnSave);
         fieldPanel.add(buttonPanel, gbc);
 
-        contentPane.add(titlePanel);
-        contentPane.add(Box.createVerticalStrut(20));
         contentPane.add(fieldPanel);
-//        contentPane.add(Box.createVerticalStrut(10));
-//        contentPane.add(buttonPanel);
         contentPane.add(Box.createVerticalGlue());
+    }
 
-        btnSave.addActionListener(e -> handleChangePassword(gbc));
+    private JPanel createPasswordFieldPanel(JPasswordField passwordField, String placeholder, ImageIcon iconHide, ImageIcon iconShow) {
+        JPanel panel = new JPanel(new BorderLayout());
+        passwordField.setColumns(15);
+        panel.setPreferredSize(new Dimension(250, 36));
+
+        stylePasswordField(passwordField);
+       // setPlaceholder(passwordField, placeholder);
+        Common.setPlaceholder(passwordField, placeholder);
+        passwordField.setEchoChar('*');
+
+        JButton toggleBtn = new JButton(iconHide);
+        toggleBtn.setPreferredSize(new Dimension(40, 30));
+        toggleBtn.setFocusPainted(false);
+        toggleBtn.setContentAreaFilled(true);
+        toggleBtn.setBorderPainted(false);
+
+        // Background color consistent regardless of toggle (customize if needed)
+        Color bgColor = new Color(230, 230, 235);
+        toggleBtn.setBackground(bgColor);
+
+        toggleBtn.addActionListener(e -> {
+            if (passwordField.getEchoChar() == 0) {
+                // Hide password
+                passwordField.setEchoChar('*');
+                toggleBtn.setIcon(iconHide);
+            } else {
+                // Show password
+                passwordField.setEchoChar((char) 0);
+                toggleBtn.setIcon(iconShow);
+            }
+        });
+
+        panel.add(passwordField, BorderLayout.CENTER);
+        panel.add(toggleBtn, BorderLayout.EAST);
+
+        return panel;
     }
 
     private void stylePasswordField(JPasswordField passwordField) {
@@ -206,72 +169,67 @@ public class ConfirmPasswordView extends JFrame {
         ));
     }
 
-    private void handleChangePassword(GridBagConstraints gbc) {
+    private void handleChangePassword() {
         String newPassword = String.valueOf(txtNewPassword.getPassword()).trim();
         String confirmPassword = String.valueOf(txtConfirmPassword.getPassword()).trim();
 
+        // Check placeholders, avoid false positive from placeholders showing
         if (newPassword.equals("Enter new password") || confirmPassword.equals("Confirm new password")) {
-        	rfvAllFields.setText("Please fill in both fields.");
+            rfvAllFields.setText("Please fill in both fields.");
             return;
         }
 
         if (!newPassword.equals(confirmPassword)) {
-        	rfvAllFields.setText("Passwords do not match");
-//            JOptionPane.showMessageDialog(this, "Passwords do not match.", "Mismatch", JOptionPane.ERROR_MESSAGE);
+            rfvAllFields.setText("Passwords do not match.");
             return;
         }
 
         if (!Pattern.matches(passwordRegex, newPassword)) {
-        	rfvAllFields.setText("Password must be at least 7 characters, include letters, numbers, and a special character.");
-//            JOptionPane.showMessageDialog(this,
-//                "Password must be at least 7 characters, include letters, numbers, and a special character.",
-//                "Invalid Password",
-//                JOptionPane.WARNING_MESSAGE);
+            rfvAllFields.setText("<html>Password must be at least 7 length<br>& numbers & a special character.</html>");
             return;
         }
 
         if (updatePasswordInDatabase(newPassword)) {
-            JOptionPane.showMessageDialog(this, "Password updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-           
-            // Assuming LoginView exists and should be shown after successful password reset
-            LoginView loginView = new LoginView();
-            loginView.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            loginView.setVisible(true);
-
-            // Close current window
-            this.dispose();
-
+            JOptionPane.showMessageDialog(this, "Password updated successfully.");
+            new LoginView().setVisible(true);
+            dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Failed to update password.", "Database Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failed to update password.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private boolean updatePasswordInDatabase(String newPassword) {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword)) {
-            String sql = "UPDATE useraccount SET user_password = ? WHERE user_email = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+        System.out.println("Attempting to update password for user: " + userEmail);
+        System.out.println("New password: " + newPassword);
+
+        String sql = "UPDATE useraccount SET user_password = ? WHERE user_email = ?";
+        try (Connection conn = config.DBConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             
             stmt.setString(1, newPassword);
             stmt.setString(2, userEmail);
-            int rows = stmt.executeUpdate();
-            return rows > 0;
+
+            int rowsUpdated = stmt.executeUpdate();
+            System.out.println("Rows updated: " + rowsUpdated);
+            return rowsUpdated > 0;
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
+
+
     private void setPlaceholder(JPasswordField passwordField, String placeholder) {
-        final char defaultEchoChar = passwordField.getEchoChar(); // Save original echo char
+        final char defaultEchoChar = '*';
         final boolean[] showingPlaceholder = {true};
 
-        // Set initial placeholder
         passwordField.setEchoChar((char) 0);
         passwordField.setForeground(Color.GRAY);
         passwordField.setText(placeholder);
 
-        // Focus behavior
         passwordField.addFocusListener(new FocusAdapter() {
-            @Override
             public void focusGained(FocusEvent e) {
                 if (showingPlaceholder[0]) {
                     passwordField.setText("");
@@ -281,55 +239,20 @@ public class ConfirmPasswordView extends JFrame {
                 }
             }
 
-            @Override
             public void focusLost(FocusEvent e) {
                 if (String.valueOf(passwordField.getPassword()).isEmpty()) {
-                    passwordField.setEchoChar((char) 0);
-                    passwordField.setForeground(Color.GRAY);
                     passwordField.setText(placeholder);
+                    passwordField.setForeground(Color.GRAY);
+                    passwordField.setEchoChar((char) 0);
                     showingPlaceholder[0] = true;
                 }
             }
         });
-
-        // Key listener: clear placeholder on first key
-        passwordField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (showingPlaceholder[0]) {
-                    passwordField.setText("");
-                    passwordField.setForeground(Color.BLACK);
-                    passwordField.setEchoChar(defaultEchoChar);
-                    showingPlaceholder[0] = false;
-                }
-            }
-        });
-
-        // Document listener: detect deletion and restore placeholder immediately
-        passwordField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            private void update() {
-                SwingUtilities.invokeLater(() -> {
-                    String currentText = String.valueOf(passwordField.getPassword());
-                    if (!showingPlaceholder[0] && currentText.isEmpty()) {
-                        passwordField.setEchoChar((char) 0);
-                        passwordField.setForeground(Color.GRAY);
-                        passwordField.setText(placeholder);
-                        showingPlaceholder[0] = true;
-                        passwordField.setCaretPosition(0); // Optional: move caret to start
-                    }
-                });
-            }
-
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { update(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { update(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { update(); }
-        });
     }
 
-   
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
-            ConfirmPasswordView view = new ConfirmPasswordView("userEmail"); // Pass an empty string or a test email for testing
+            ConfirmPasswordView view = new ConfirmPasswordView("user@example.com");
             view.setVisible(true);
         });
     }

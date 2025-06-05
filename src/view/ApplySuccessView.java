@@ -52,7 +52,7 @@ public class ApplySuccessView extends JFrame {
 		JLabel lblTitleBar = new JLabel("Myanmar DCR Recruitment System");
 		lblTitleBar.setForeground(Color.WHITE);
 		lblTitleBar.setFont(new Font("MS UI Gothic", Font.PLAIN, 20));
-		lblTitleBar.setBounds(183, 10, 342, 30);
+		lblTitleBar.setBounds(216, 10, 340, 30);
 		panel.add(lblTitleBar);
 
 		// Load the image and create a JLabel
