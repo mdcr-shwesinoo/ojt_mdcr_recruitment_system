@@ -8,7 +8,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -376,7 +377,7 @@ public class AcceptRejectFormView extends JFrame {
 					String subject = "Welcome to Myanmar DCR Co., Ltd.";
 
 					String htmlMessage = "<div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>"
-							+ "<h2 style='color: #0073e6;'>🎉 Congratulations!</h2>"
+							+ "<h2 style='color: #0073e6;'>脂 Congratulations!</h2>"
 							+ "<p>We're excited to have you join our team at <strong>Myanmar DCR Co., Ltd.</strong></p>"
 							+ "<p>Please feel free to reach out with any questions.</p>" + "<br>"
 							+ "<p style='font-size: 12px; color: gray;'>This is an automated message. Please do not reply.</p>"
@@ -520,6 +521,31 @@ public class AcceptRejectFormView extends JFrame {
 		lblTitleBar.setFont(new Font("MS UI Gothic", Font.PLAIN, 20));
 		lblTitleBar.setBounds(216, 10, 340, 30);
 		menuPanel.add(lblTitleBar);
+		
+		JLabel lblChangePassword = new JLabel("Change Password");
+		lblChangePassword.setBounds(1200, 10, 340, 30);
+		lblChangePassword.setForeground(new Color(0xCCCCCC));
+		lblChangePassword.setFont(new Font("MS UI Gothic", Font.PLAIN, 17));
+		menuPanel.add(lblChangePassword);
+
+		lblChangePassword.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ChangePasswordView changePasswordView = new ChangePasswordView(id, AcceptRejectFormView.this);
+				changePasswordView.setVisible(true);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				lblChangePassword.setForeground(Color.WHITE); // change to blue on hover
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lblChangePassword.setForeground(new Color(0xCCCCCC));
+			}
+
+		});
 		/*
 		 * Error Message Label End
 		 */

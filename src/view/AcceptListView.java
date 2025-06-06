@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -74,6 +76,35 @@ public class AcceptListView extends JFrame {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT); // center text in available space
 		titlePanel.add(lblNewLabel);
 
+		
+		//
+		JLabel lblChangePassword = new JLabel("Change Password");
+		lblChangePassword.setBounds(1200, 10, 340, 30);
+		lblChangePassword.setForeground(new Color(0xCCCCCC));
+		lblChangePassword.setFont(new Font("MS UI Gothic", Font.PLAIN, 17));
+		titlePanel.add(lblChangePassword);
+		
+		lblChangePassword.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ChangePasswordView changePasswordView = new ChangePasswordView(loggedInId, AcceptListView.this);
+                changePasswordView.setVisible(true);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				lblChangePassword.setForeground(Color.WHITE); // change to blue on hover
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lblChangePassword.setForeground(new Color(0xCCCCCC));
+			}
+
+		});
+
+		
+		
 		// Labels and TextField
 		JPanel searchPanel = new JPanel(new BorderLayout());
 		searchPanel.setBorder(new EmptyBorder(0, 30, 0, 30));
@@ -84,7 +115,7 @@ public class AcceptListView extends JFrame {
 
 		JPanel formPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(0, 10, 0, 10);
+		gbc.insets = new Insets(0, 10, 0, 0);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		
 		gbc.gridx = 0;
@@ -107,6 +138,7 @@ public class AcceptListView extends JFrame {
 
 		gbc.gridx++;
 		JButton btnBack = Common.addActionButton("Back");
+		btnBack.setPreferredSize(new Dimension(100, 30));
 		formPanel.add(btnBack, gbc);
         
 		searchPanel.add(lblTotalApplicants, BorderLayout.WEST);

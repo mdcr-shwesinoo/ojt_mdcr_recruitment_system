@@ -103,9 +103,9 @@ public class ApplicantListView extends JFrame {
 		titlePanel.add(lblNewLabel);
 		
 		JLabel lblChangePassword = new JLabel("Change Password");
-		lblChangePassword.setBounds(1300, 10, 340, 30);
+		lblChangePassword.setBounds(1200, 10, 340, 30);
 		lblChangePassword.setForeground(new Color(0xCCCCCC));
-		lblChangePassword.setFont(new Font("MS UI Gothic", Font.PLAIN, 15));
+		lblChangePassword.setFont(new Font("MS UI Gothic", Font.PLAIN, 17));
 		titlePanel.add(lblChangePassword);
 		
 		lblChangePassword.addMouseListener(new MouseAdapter() {

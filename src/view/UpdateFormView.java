@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -128,7 +130,8 @@ public class UpdateFormView extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 961, 809);
 		getContentPane().setLayout(new BorderLayout());
-
+		
+		
 		JPanel wrapper = new JPanel(new GridBagLayout());
 
 		JPanel formPanel = new JPanel();
@@ -537,6 +540,33 @@ public class UpdateFormView extends JFrame {
 		lblTitleBar.setFont(new Font("MS UI Gothic", Font.PLAIN, 20));
 		lblTitleBar.setBounds(216, 10, 340, 30);
 		menuPanel.add(lblTitleBar);
+		
+		
+		
+		JLabel lblChangePassword = new JLabel("Change Password");
+		lblChangePassword.setBounds(1200, 10, 340, 30);
+		lblChangePassword.setForeground(new Color(0xCCCCCC));
+		lblChangePassword.setFont(new Font("MS UI Gothic", Font.PLAIN, 17));
+		menuPanel.add(lblChangePassword);
+
+		lblChangePassword.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ChangePasswordView changePasswordView = new ChangePasswordView(id, UpdateFormView.this);
+				changePasswordView.setVisible(true);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				lblChangePassword.setForeground(Color.WHITE); // change to blue on hover
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lblChangePassword.setForeground(new Color(0xCCCCCC));
+			}
+
+		});
 		/*
 		 * Error Message Label End
 		 */
